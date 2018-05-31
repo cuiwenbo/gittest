@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>缓存管理</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <script src="js/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script>
+        	function clearMessage() {
+        		$("#input_mess").val("");
+        	}
+        	function showMessage(mess) {
+        		$("#input_mess").val(mess);
+        	}
+        	
+        	function getMc() {
+        		clearMessage();
+        		$("#input_val").val("");
+        		var key = $.trim($("#input_key").val());
+        		if(key.length == 0) {
+        			showMessage("请输入KEY");
+        			return;
+        		}
+        		showMessage("正在读取缓存数据");
+        		var p = {};
+        		p.key = key;
+        		$.ajax({
+          			url:"mc/get",
+          			type:"post",
+          			data:p,
+          			dataType:"json",
+          			success: function(ret){
+          				var code = ret.result;
+          				if(code == 0) {
+          					showMessage("读取数据完成");
+          					$("#input_val").val(ret.data);
+          				} else {
+          					showMessage(code + ":" + ret.message)
+          				} 				
+          		}});  		
+        	}
+        	function setMc() {
+        		clearMessage();
+        		var key = $.trim($("#input_key").val());
+        		if(key.length == 0) {
+        			showMessage("请输入KEY");
+        			return;
+        		}
+        		var val = $("#input_val").val();
+        		var time = $("#input_time").val();
+        		showMessage("正在设置缓存数据");
+        		var p = {};
+        		p.key = key;        		
+        		p.val = val;
+        		p.time = time;
+        		$.ajax({
+          			url:"mc/set",
+          			type:"post",
+          			data:p,
+          			dataType:"json",
+          			success: function(ret){          				
+          					showMessage(ret.result + ":" + ret.message)
+          				} 				
+          		});  		
+        	}
+        	function rmMc() {
+        		clearMessage();
+        		 $("#input_val").val("");
+        		var key = $.trim($("#input_key").val());
+        		if(key.length == 0) {
+        			showMessage("请输入KEY");
+        			return;
+        		}
+        		if(!confirm("操作将无法恢复，确定要清除吗?")) return;
+        		
+        		showMessage("正在清除缓存数据");
+        		var p = {};
+        		p.key = key;
+        		$.ajax({
+          			url:"mc/rm",
+          			type:"post",
+          			data:p,
+          			dataType:"json",
+          			success: function(ret){
+          				var code = ret.result;
+          				if(code == 0) {
+          					showMessage("清除数据完成");          					
+          				} else {
+          					showMessage(code + ":" + ret.message)
+          				} 				
+          		}});  		        		
+        	}
+        	
+        	var apis = {};
+        	apis["user.getID"] = {keys:'XINDUN-ID:table'};
+        	apis["config"] = {keys:'CONFIGS-VERSION'};
+        	apis["payerror"] = {keys:'PAYERROR:uid'};
+        	apis["oid"] = {keys:'ORDERID:now'};
+        	apis["payoid"] = {keys:'PAY19:typeORDERID:now'};
+        	apis["confirmuid"] = {keys:'PAY19:typeORDERID:now'};
+        	apis["19payconfig"] = {keys:'PAY19Configs'};
+        	apis["sendsms"] = {keys:'SMS_LAST:sms.getType():phone'};
+        	apis["getversion"] = {keys:'VERION:app:plat:2'};
+        	apis["youdunID"] = {keys:'UDCREDIT_OID:type:now'};
+        	apis["getAPPbank"] = {keys:'BANKS:app'};
+        	apis["getcitycode"] = {keys:'CITYS:pcode'};
+        	apis["getimg"] = {keys:'ImgSession:uid'};
+        	apis["checkerrorlock"] = {keys:'UserAuthErrTimes:today:uid'};
+        	apis["personidenty"] = {keys:'UserAuthErrTimes:today:uid'};
+        	apis["checkpwd"] = {keys:'ModifyPaypassError:uid'};
+        	apis["modifypwd"] = {keys:'ModifyPaypassError:uid'};
+        	apis["cleartoken"] = {keys:'FENGYIDAI:COOKIE:uid'};
+			apis["clearDataCollect"] = {keys:'USER_DATA_COLLECT_SESSION:uid'};
+			apis["clearJuxinliSession"] = {keys:'JUXINLI:SESSION:uid'};
+            apis["Mobile1"] = {keys:'DS_MOBILE_CURR_SOURCE_0'};
+            apis["Mobile2"] = {keys:'DS:SESSION:JingShu_0'};
+            apis["Mobile3"] = {keys:'DS:SESSION:JuXinLi_0'};
+			apis["clearPayError"] = {keys:'XINUO:PAYERROR:uid'};
+        	function run(apiName){
+        		var api = apis[apiName];
+				if(api == null) {
+					showMessage("无效的api");
+					return;				
+				}	
+				$("#input_key").val(api.keys);
+        	}
+        	
+        </script>
+</head>
+<body>  
+<div class="container">
+        <div class="row">
+                <div class="col-xs-12 alert alert-warning text-center">缓存管理</div>
+                	<div class="dropdown col-xs-3">								
+				   <button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">
+					  缓存KEY					  
+					  <span class="caret"></span>
+				   </button>
+				   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('user.getID')">获取ID</a></li>
+					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('config')">版本配置</a></li>
+					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('payerror')">支付失败</a></li>
+					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('oid')">订单ID</a></li>
+					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('payoid')">获取支付订单ID</a></li>
+					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('confirmuid')">确认支付用户ID</a></li>
+					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('19payconfig')">获取19PAY配置</a></li>
+					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('sendsms')">发送验证码</a></li>
+					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('getversion')">获取最新版本</a></li>
+					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('youdunID')">有盾风控平台ID</a></li>
+					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('getAPPbank')">获取APP支持的银行</a></li>
+					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('getcitycode')">获取城市代码</a></li>
+					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('getimg')">获取图片</a></li>
+					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('checkerrorlock')">检查密码错误上锁</a></li>
+					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('personidenty')">人脸认证</a></li>
+					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('checkpwd')">检查原始密码的有效性</a></li>
+					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('modifypwd')">修改密码</a></li>
+					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('userlogin')">用户登录/退出</a></li>
+					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('cleartoken')">清除token</a></li>
+					   <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('clearDataCollect')">清除数据源缓存</a></li>
+					   <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('Mobile1')">运营商1</a></li>
+					   <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('Mobile2')">运营商2</a></li>
+					   <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('Mobile3')">运营商3</a></li>
+					   <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:run('clearPayError')">清除支付密码次数</a></li>
+				   </ul>				
+				</div>
+				
+                <div class="btn-group col-xs-12" style="margin-top:20px;margin-bottom:20px">
+  				<button type="button" onclick="getMc()" class="col-xs-2 btn btn-info">读 取</button>
+  				<button type="button" onclick="setMc()" class="col-xs-2 btn btn-warning">设 置</button>
+  				<button type="button" onclick="rmMc()" class="col-xs-2 btn btn-danger">清 除</button>
+				</div>
+                
+                <div class="col-xs-12">
+                        <div class="input-group">
+                        <span class="input-group-addon">　KEY：</span><input type="text" id="input_key" class="form-control" placeholder="输入缓存的KEY">
+                        </div>
+                        <div class="input-group" style="margin-top:10px">
+                        <span class="input-group-addon">　时长：</span><input type="text" id="input_time" class="form-control" placeholder="输入缓存超时时长">
+                        </div>
+                        
+                        <div class="input-group" style="margin-top:10px">
+                        <span class="input-group-addon">　　值：</span><textarea id="input_val" class="form-control" rows="10"></textarea>
+                        </div>
+                </div>
+            	<div class="col-xs-12" style="margin-top:20px">
+            	<input style="color:red" readonly type="text" id="input_mess" class="form-control" />
+            	</div>
+        </div>
+</div>
+</body>
+</html>

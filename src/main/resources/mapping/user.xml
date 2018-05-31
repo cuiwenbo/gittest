@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user">
+    
+    <select id="getId_tb_user" resultType="long">
+        select max(id) from tb_user
+    </select>
+
+    <update id="setSeller" parameterType="com.manong.mall.bean.UserBean">
+        update tb_user set seller = 1 where id = #{id}
+    </update>
+    
+    <select id="test" parameterType="map" resultType="int"><!-- 分页得到总条数 -->
+	select count(1) from dual
+      </select>
+    <select id="getByPhone" parameterType="string" resultType="com.manong.mall.bean.UserBean">
+          select * from tb_user where phone=#{phone}
+      </select>
+
+    <!-- 用户注册 -->
+    <insert id="register" parameterType="com.manong.mall.bean.UserBean">
+        insert into tb_user (id,phone,passwd,name,idcn,address,pict,sign,authed,state,nick) VALUES
+        (#{id},#{phone},#{passwd},#{name},#{idcn},#{address},#{pict},#{sign},#{authed},#{state},#{nick})
+    </insert>
+
+    <!-- 用户登录 -->
+    <select id="login" parameterType="string" resultType="com.manong.mall.bean.UserBean">
+        select * from tb_user where phone=#{phone}
+    </select>
+
+    <!-- 修改密码 -->
+    <update id="updatePwd" parameterType="com.manong.mall.bean.UserBean">
+        update tb_user set passwd=#{passwd} where id=#{id}
+    </update>
+
+    <!-- 修改用户基本信息 -->
+    <update id="editInfo" parameterType="com.manong.mall.bean.UserBean">
+        update tb_user set  pict=#{pict},nick=#{nick},sign=#{sign} where id=#{id}
+    </update>
+    <!-- 修改账号 -->
+    <update id="setPhone" parameterType="com.manong.mall.bean.UserBean">
+        update tb_user set phone=#{phone} where id=#{id}
+    </update>
+    <insert id="action" parameterType="map">
+        insert into tb_user_action(uid,optime,action,method,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10)
+        values(#{userid},now(), #{action},#{method},#{p1},#{p2},#{p3},#{p4},#{p5},#{p6},#{p7},#{p8},#{p9},#{p10})
+    </insert>
+    <insert id="loginlog" parameterType="map">
+        insert into tb_user_login(uid,logintime,loginip) values(#{uid}, now(), #{loginip});
+    </insert>
+    <insert id="addExt" parameterType="map">
+        insert into tb_user_ext(id,regtime,regip,province,city,district,address,receiver,phone) values(#{uid}, now(), #{regip},#{province},#{city},#{district},#{address},#{receiver},#{phone});
+    </insert>
+    <update id="UpdateExt" parameterType="map">
+        update tb_user_ext set loginip=#{loginip},logintime=now() where id=#{uid}
+    </update>
+    <!-- 修改买家的地址 -->
+    <select id="getExt" parameterType="long" resultType="com.manong.mall.bean.UserExtBean">
+        select * from tb_user_ext where id=#{id}
+    </select>
+
+    <update id="editAddre" parameterType="com.manong.mall.bean.UserExtBean">
+          update tb_user_ext set province=#{province},city=#{city},district=#{district},address=#{address},receiver=#{receiver},phone=#{phone} where id=#{id}
+      </update>
+</mapper>

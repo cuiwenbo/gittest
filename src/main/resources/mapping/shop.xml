@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="shop">
+
+    <select id="getId_tb_shop_draw" resultType="long">
+        select max(id) from tb_shop_draw
+    </select>
+
+    <select id="getId_tb_order_return" resultType="long">
+        select max(id) from tb_order_return
+    </select>
+
+    <select id="getId_tb_shop" resultType="long">
+        select max(id) from tb_shop
+    </select>
+
+    <select id="getId_tb_audit" resultType="long">
+        select max(id) from tb_audit
+    </select>
+
+    <!-- 添加店铺 -->
+    <insert id="addshop" parameterType="com.manong.mall.bean.ShopBean">
+  	    insert into tb_shop (id,uid,cname,province,city,district,address,name,catalog,uname,pict,phone,qq,intro,type,authed,state)
+  	    values(#{id},#{uid},#{cname},#{province},#{city},#{district},#{address},#{name},#{catalog},#{uname},#{pict},#{phone},#{qq},#{intro},0,0,0)
+  	</insert>
+    <update id="setSeller" parameterType="com.manong.mall.bean.UserBean"><!-- 修改用户为开店状态（1） -->
+        update tb_user set seller=1 where id=#{id}
+    </update>
+    <update id="updateAuth" parameterType="com.manong.mall.bean.ShopBean"><!-- 添加认证信息后，改变认证状态 -->
+        update tb_shop set authed=#{authed},type=#{type} where id=#{id}
+    </update>
+
+    <!--店铺认证  -->
+    <insert id="Certification" parameterType="com.manong.mall.bean.AuditBean">
+        insert into tb_audit (id,uid,sid,type,name,idcn,pict,createtime,optime,audit,opertor,auditresult,remarks,username) values
+        (#{id},#{uid},#{sid},#{type},#{name},#{idcn},#{pict},now(),#{optime},#{audit},#{opertor},#{auditresult},#{remarks},#{username})
+    </insert>
+    <select id="topage" parameterType="long" resultType="com.manong.mall.bean.ShopBean"><!-- 查询最后一条店铺信息 -->
+        select * from tb_shop where uid=#{uid} order by id desc limit 1
+    </select>
+    <select id="check" parameterType="string" resultType="com.manong.mall.bean.ShopBean">
+        select * from tb_shop where  name=#{name}
+    </select>
+    <!-- 取消认证 -->
+    <update id="cancelAudit" parameterType="com.manong.mall.bean.AuditBean">
+        update tb_audit set audit=#{audit},remarks=#{remarks} where sid=#{sid}
+    </update>
+    <select id="selAudit" parameterType="long" resultType="com.manong.mall.bean.AuditBean"><!-- 查询认证资料 -->
+        select * from tb_audit where sid=#{sid}  and audit=0
+    </select>
+    <!-- 用户所有店铺 -->
+    <select id="getAllByUser" parameterType="long" resultType="com.manong.mall.bean.ShopBean">
+        select * from tb_shop where uid=#{uid} order by id
+    </select>
+    <select id="getResult" parameterType="long" resultType="com.manong.mall.bean.AuditBean">
+        select * from tb_audit where sid=#{sid} ORDER BY id DESC LIMIT 1
+    </select>
+
+
+
+    <select id="get"  parameterType="long" resultType="com.manong.mall.bean.ShopBean">
+        select * from tb_shop where id=#{sid}
+    </select>
+    <!-- 修改店铺信息 -->
+    <update id="editinfo" parameterType="com.manong.mall.bean.ShopBean">
+        update tb_shop set cname=#{cname},province=#{province},city=#{city},district=#{district},
+        address=#{address},name=#{name},catalog=#{catalog},uname=#{uname},pict=#{pict},phone=#{phone},qq=#{qq},intro=#{intro},bpict=#{bpict},partner=#{partner},appid=#{appid},appsecret=#{appsecret} where id=#{id}
+    </update>
+
+    <update id="setPhone" parameterType="com.manong.mall.bean.ShopBean">
+        update tb_shop set phone=#{phone} where id=#{id}
+    </update>
+
+    <insert id="addLoginLog" parameterType="map">
+        insert into tb_shop_login(sid,uid,logintime) values(#{sid},#{uid},now())
+    </insert>
+    <select id="getExt" parameterType="long" resultType="com.manong.mall.bean.ShopExtBean">
+        select * from tb_shop_ext where id=#{id}
+    </select>
+    <insert id="addExt" parameterType="com.manong.mall.bean.ShopExtBean">
+        insert into tb_shop_ext(id,total,draw,froze,free,bank,bankdeposit,username,accountno,createtime,visittime)
+        values(#{id},#{total},#{draw},#{froze},#{free},#{bank},#{bankdeposit},#{username},#{accountno},now(),now())
+    </insert>
+    <update id="updateExtBank" parameterType="com.manong.mall.bean.ShopExtBean">
+        update tb_shop_ext set bank=#{bank},bankdeposit=#{bankdeposit},username=#{username},accountno=#{accountno} where id=#{id}
+    </update>
+    <update id="updateExtLogin" parameterType="long">
+        update tb_shop_ext set visittime=now() where id=#{id}
+    </update>
+    <!-- 删除店铺 -->
+    <delete id="del" parameterType="long">
+        delete from tb_shop where id=#{id} and authed=0 or authed=3
+    </delete>
+    <delete id="delExt" parameterType="long">
+        delete from tb_shop_ext where id=#{id}
+    </delete>
+
+    <!-- 收支明细 -->
+    <select id="draw_getCount" parameterType="map" resultType="com.manong.mall.bean.DrawBean">
+        select count(*) from tb_shop_draw where sid=#{sid}
+    </select>
+    <select id="draw_getList" parameterType="map" resultType="com.manong.mall.bean.DrawBean">
+        select * from tb_shop_draw where sid=#{sid} order by id  desc limit #{firstResult},#{maxResult}
+    </select>
+
+    <update id="updateShow" parameterType="com.manong.mall.bean.ShopBean">
+        update tb_shop set lasttime=now(),showtimes=showtimes+1 where id=#{id}
+    </update>
+
+    <select id="getTotalGoods" parameterType="long" resultType="int">
+        select count(1) from tb_goods where sid=#{sid} and amount &gt; 0 and state=0 and isvalid=0
+    </select>
+    <select id="getTotalNews"  parameterType="map" resultType="int">
+        select count(1) from tb_goods where sid=#{sid} and amount &gt; 0 and state=0 and isvalid=0 and optime &gt; #{newdate}
+    </select>
+    <select id="listHomeGoods" parameterType="long" resultType="com.manong.mall.bean.GoodsBean">
+        select id,sid,name,picts,price,orderamount,evalcount,showtimes,optime,oprice from tb_goods where sid=#{sid} and amount &gt; 0 and state=0 and isvalid=0 limit 20
+    </select>
+    <select id="userordercount" parameterType="long" resultType="int">
+        select count(1) from tb_order where userid=#{uid} and state &lt; 6
+    </select>
+
+    <select id="listHomeGoods1" parameterType="long" resultType="com.manong.mall.bean.GoodsBean"><!-- 最新 -->
+        select id,sid,name,picts,price,orderamount,evalcount,showtimes,optime,oprice from tb_goods where sid=#{sid} and amount &gt; 0 and state=0 and isvalid=0
+        order by optime desc limit 20
+    </select>
+    <select id="listHomeGoods2" parameterType="long" resultType="com.manong.mall.bean.GoodsBean"><!-- 最热(销量最好) -->
+        select id,sid,name,picts,price,orderamount,evalcount,showtimes,optime,oprice from tb_goods where sid=#{sid} and amount &gt; 0 and state=0 and isvalid=0
+        order by orderamount desc limit 20
+    </select>
+    <select id="listHomeGoods3" parameterType="long" resultType="com.manong.mall.bean.GoodsBean"><!-- 人气商品 -->
+        select id,sid,name,picts,price,orderamount,evalcount,showtimes,optime,oprice from tb_goods where sid=#{sid} and amount &gt; 0 and state=0 and isvalid=0
+        order by showtimes desc limit 20
+    </select>
+    <select id="listHomeGoods4" parameterType="long" resultType="com.manong.mall.bean.GoodsBean"><!--价格 -->
+        select id,sid,name,picts,price,orderamount,evalcount,showtimes,optime,oprice from tb_goods where sid=#{sid} and amount &gt; 0 and state=0 and isvalid=0
+        order by price limit 20
+    </select>
+
+    <!-- 最近7天收入 -->
+    <select id="income" parameterType="map" resultType="com.manong.mall.bean.AccountBean">
+        select * from tb_shop_account_detail where sid=#{sid} AND type=#{type} ORDER BY optime LIMIT 7
+    </select>
+
+
+
+
+    <!-- 修改收款账号 -->
+    <update id="editBankNo" parameterType="com.manong.mall.bean.ShopExtBean">
+        update tb_shop_ext set bank=#{bank},bankdeposit=#{bankdeposit},username=#{username},accountno=#{accountno},visittime=now()
+        where id=#{id}
+    </update>
+
+    <select id="getHomeCount" parameterType="map" resultType="int">
+        select count(1) from tb_shop where authed=1 and state=1
+    </select>
+    <select id="listHome"  parameterType="map" resultType="com.manong.mall.bean.ShopBean">
+        select * from tb_shop where authed=1 and state=1 order by id desc
+        limit #{firstResult},#{maxResult}
+
+    </select>
+
+    <!-- 关注相关 -->
+    <select id="focus_getinfo" parameterType="map" resultType="com.manong.mall.bean.ShopFocusAndVisitBean">
+        select * from tb_user_focus where uid=#{uid} and sid=#{sid}
+    </select>
+    <insert id="focus_insertInfo" parameterType="com.manong.mall.bean.ShopFocusAndVisitBean">
+        insert into tb_user_focus (uid,sid,optime) values (#{uid},#{sid},now())
+    </insert>
+    <delete id="focus_cancel" parameterType="com.manong.mall.bean.ShopFocusAndVisitBean">
+        delete from tb_user_focus where uid=#{uid} and sid=#{sid}
+    </delete>
+
+    <select id="focus_getCount" parameterType="map" resultType="int"><!-- 分页得到总条数 -->
+        select count(1) from  tb_user_focus f,tb_shop s
+        where f.sid=s.id AND f.uid=#{uid}
+    </select>
+    <select id="focus_listAll" parameterType="map" resultType="com.manong.mall.bean.ShopFocusAndVisitBean">
+       select f.*,s.`name`,s.pict,s.province,s.city,s.district,s.address,s.uname,s.phone from tb_user_focus f,tb_shop s
+       where f.sid=s.id AND f.uid=#{uid} ORDER BY f.optime DESC  limit #{firstResult},#{maxResult}
+    </select>
+
+</mapper>

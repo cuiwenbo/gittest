@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sms">
+    <insert id="add" parameterType="com.manong.mall.bean.SmsBean">
+        insert into tb_mobile_code(type,model,phone,code,createtime,validtime,lastime,rands,app,param)
+        values(#{type},#{model},#{phone},#{code},#{createtime},#{validtime},#{lastime},#{rands},#{app},#{param})
+    </insert>
+    <select id="check" parameterType="map" resultType="int">
+        select count(1) from tb_mobile_code where phone=#{phone} and code=#{code} and type=#{type} and usingstate=0 and validtime>#{now} and checktimes>0
+    </select>
+    <update id="addCheckTimes" parameterType="map">
+        update tb_mobile_code set checktimes=checktimes - 1,lastime=#{now} where phone=#{phone} and type=#{type} and usingstate=0
+    </update>
+    <update id="using" parameterType="map">
+        update tb_mobile_code set usingstate=1,usingtime=#{now} where phone=#{phone} and code=#{code} and type=#{type} and usingstate=0 and validtime > #{now}
+    </update>
+    <select id="listUnsendSms" parameterType="map" resultType="com.manong.mall.bean.SmsBean">
+        select * from tb_mobile_code where sendstate=0 and usingstate=0 and validtime &gt; #{now} and type in (${types}) limit #{limit}
+    </select>
+    <update id="updateSms" parameterType="com.manong.mall.bean.SmsBean" >
+        update tb_mobile_code set sendstate=#{sendstate},sendresult=#{sendresult},sendtime=now() where id=#{id}
+    </update>
+
+</mapper>

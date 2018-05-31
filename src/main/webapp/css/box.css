@@ -1,0 +1,171 @@
+#move_set {
+	font-size: 14px;
+	font-weight: bold;
+	color:#333333;
+	padding-left:10px;
+	padding-right:280px;
+	cursor:move;
+}
+#move_set1 {
+	font-size: 12px;
+	color:#000000;
+	width:360px;
+	cursor:move;
+	float:left;
+	text-indent: 10px;
+}
+#movebt{
+    font-size: 12px;
+	color:#000000;	
+    width:40px;
+    float:right;
+    cursor:pointer;
+
+}
+#move_set2 {
+    font-size: 12px;
+	color:#000000;
+    float:left;
+	text-indent: 10px;
+	cursor:move;
+	width:550px;
+}
+#title_1 {
+    background-color:#AFCEF9;
+	height: 27px;
+	width: 400px;
+	line-height:27px;
+	color:#000000;
+}
+#title_11 {
+	background-color:#AFCEF9;
+	height: 27px;
+	width: 600px;
+	line-height:27px;
+	color:#000000;
+}
+#title_2 {
+	height:190px;
+	font-size:12px;
+	color:#333333;
+}
+#title_22 {
+	height:335px;
+	font-size:14px;
+	color:#333333;
+}
+#title_23 {
+	height:232px;
+	font-size:14px;
+	color:#333333;
+}
+#title_3 {
+	text-align:center;
+	font-size:12px;
+}
+.table_text {
+	border:solid #cacaca 1px;
+	height:20px;
+	width:200px;
+	line-height:20px;
+	color: #333333;
+}
+.table_select {
+	border:solid #cacaca 1px;
+	height:20px;
+	width:200px;
+	line-height:20px;
+	color: #333333;
+}
+.box {
+	border: 1px solid #d8eefc;
+	width:530px;
+	padding:1px;
+	position: absolute;
+	z-index: 10001;
+	left:155px;
+	top:85px;
+	background-color: #f5fcff;
+}
+.tx_div {
+	width:510px;
+	font-size: 12px;
+	color: #333333;
+	padding-left:10px;
+	padding-right:10px;
+	padding-bottom:0px;
+	overflow-y:auto;
+	scrollbar-face-color:#d8eefc;
+	scrollbar-highlight-color:#ffffff;
+	scrollbar-shadow-color:#919192;
+	color:#333333;
+	scrollbar-3dlight-color:#ffffff;
+	line-height:100%;
+	scrollbar-arrow-color:#919192;
+	padding-top:0px;
+	scrollbar-track-color:#f5fcff;
+	font-family:����;
+	scrollbar-darkshadow-color:#ffffff;
+	letter-spacing:1pt;
+	height:220px;
+	text-align:left
+}
+.tl_set {
+	font-size: 14px;
+	font-weight: bold;
+	color:#333333;
+	padding-left:10px;
+	padding-right:300px;
+	float:left;
+}
+
+.boxAct
+{
+padding-right:10px; text-align:right;
+height:50px; line-height:50px;
+}
+.title {
+	background-image: url(../images/boxtitle.jpg);
+	background-repeat: repeat-x;
+	height: 32px;
+	width: 530px;
+	line-height:32px;
+}
+.close {
+	float:right;
+	padding-right:3px;
+	font-size:12px;
+	cursor:pointer;
+}
+#TB_title{
+	background-color:#AFCEF9;
+	height:27px;
+	cursor:move;
+	padding:1px;
+}
+#TB_ajaxWindowTitle{
+	float:left;
+	padding:7px 0 5px 10px;
+	margin-bottom:1px;
+}
+#TB_closeAjaxWindow{
+	padding:5px 10px 7px 0;
+	margin-bottom:1px;
+	text-align:right;
+	float:right;
+}
+.testset{
+border:solid 1px  #CCCCCC;
+font-size: 12px;
+color: #333333;
+
+}
+.textStockDate{
+ width:18px;
+ height:16px;
+ background:url('../images/date.jpg') 0px 0px;
+
+ background-repeat:no-repeat;
+ border:solid 1px  #CCCCCC;
+ border-left:0px;
+} 

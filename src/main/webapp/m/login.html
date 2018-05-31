@@ -1,0 +1,304 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+<link href=" css/style.css" rel="stylesheet" >
+<link href=" css/bootstrap.css" rel="stylesheet" >
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<style>
+.row{margin:0}
+</style>
+<title>微袋</title>
+
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+</head>
+
+<body style=" background:#f6f6f6;">
+
+ <div class="container"> 
+    <div class="row">
+      <div class="col-xs-12">
+      	<div class="col-xs-12 lad-box">
+            <div id="login_Div" style="">
+		    <form action="../user/login" method="post" target="hidefrm" onsubmit="return checkLogin()">
+                   <div class="input-group">
+              		 <span class="input-group-btn">
+                 		 <span class="btn btn-default" >
+                    		手&nbsp;机&nbsp;号:
+                  		</span>
+               		 </span>
+                     <input type="text" class="form-control"  name="phone" maxlength="11"  id="login_phone"  autocomplete="off"  placeholder="请填写手机号码">
+                   </div>
+                   <div class="input-group lad-tic">
+              		 <span class="input-group-btn">
+                 		 <span class="btn btn-default" >
+                    		密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码:
+                  		</span>
+               		 </span>
+                     <input type="password" class="form-control" maxlength="20" placeholder="请填写密码" name="passwd" id="login_pass">
+                   </div>
+                   <div class="row">
+			              <div class="col-xs-12">
+			 				 <div class="col-xs-12 lad-btn">
+			           	       <input type="submit"  class="btn btn-success" value="登录">
+			                 </div>
+			              </div>
+			        </div>
+			        <div class="row">
+			              <div class="col-xs-12">
+			 				 <div class="col-xs-12 lad-btn">
+			           	       <input type="button"  class="btn btn-success" value="返回" onclick="window.history.go(-1)" style="background:#fff;border-color:#ccc;color:#555">
+			                 </div>
+			              </div>
+			        </div>
+            </form>
+			</div>
+			     
+            <div id="reg_Div" style="display:none;">
+	    	<form action="../user/reg" method="post" target="hidefrm" onsubmit="return checkReg()">
+                    <div class="input-group">
+              		 <span class="input-group-btn">
+                 		 <span class="btn btn-default" >
+                    		手&nbsp;机&nbsp;号:
+                  		</span>
+               		 </span>
+                     <input type="text" name="phone" id="reg_phone" maxlength="11" autocomplete="off" class="form-control" placeholder="请填写手机号码" >
+                   </div>
+                    <div class="input-group lad-tic">
+              		 <span class="input-group-btn">
+                 		 <span class="btn btn-default" >
+                    		验&nbsp;证&nbsp;码:
+                  		</span>
+               		 </span>
+                     <input type="text"  id="phonecode" name="phonecode" class="form-control" placeholder="输入验证码" autocomplete="off">
+                     <span class="input-group-btn">
+                 			<input class="btn btn-default" style="padding:6px" type="button" value="获取验证码" id="getcode" onclick="sendPhoneCode()">
+                  	</span>
+                   </div>
+                   
+                   
+                    <div class="input-group lad-tic">
+              		 <span class="input-group-btn">
+                 		 <span class="btn btn-default" >
+                    		昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
+                  		</span>
+               		 </span>
+                     <input type="text" class="form-control" placeholder="请填写昵称"  id="nick" name="nick"  autocomplete="off">
+                   </div>
+                   
+                   
+                    <div class="input-group lad-tic">
+              		 <span class="input-group-btn">
+                 		 <span class="btn btn-default" >
+                    		密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码:
+                  		</span>
+               		 </span>
+                     <input type="password" class="form-control" maxlength="20"  placeholder="请设置密码" name="passwd" id="reg_pass1">
+                   </div>
+                   
+                   
+                   <div class="input-group lad-tic">
+              		 <span class="input-group-btn">
+                 		 <span class="btn btn-default" >
+                    		重复密码:
+                  		</span>
+               		 </span>
+                     <input type="password" class="form-control" maxlength="20" placeholder="重复一遍密码" name="passwd2" id="reg_pass2">
+                   </div>
+                   <div class="row">
+			              <div class="col-xs-12">
+			 				 <div class="col-xs-12 lad-btn">
+			           	       <input type="submit" class="btn btn-success" value="注册">
+			                 </div>
+			              </div>
+			        </div>
+			        <div class="row">
+			              <div class="col-xs-12">
+			 				 <div class="col-xs-12 lad-btn">
+			           	       <input type="button"  class="btn btn-success" value="返回" onclick="window.history.go(-1)" style="background:#fff;border-color:#ccc;color:#555">
+			                 </div>
+			              </div>
+			        </div>
+          			<!--<div class="row">
+			        	<div class="col-xs-12 lad-wri">
+		                  	注册视为同意<a href="#">微袋协议</a>,系统将为您创建微袋帐号
+		            	 </div>
+    				 </div>-->
+           </form>
+			</div>
+           </div>
+      
+        </div>	
+       
+    </div>
+    
+     
+ </div> 
+<div style="text-align:center;margin-top:30px;color:#666">
+	<a href="javascript:;" onclick="showDiv('reg')" id="regUser">注册</a>
+	<a href="javascript:;" onclick="showDiv('login')" id="loginUser"  style="display:none">登录帐号</a>
+	|
+	<a href="forget.html">忘记密码</a>
+			
+</div> 
+
+
+<iframe style="display:none" name="hidefrm"></iframe>
+
+</body>
+</html>
+<script>
+//登录、注册切换
+function showDiv(change){
+	if(change=='reg'){
+		$('#login_Div').hide();
+		$('#regUser').hide();
+		$('#loginUser').show();
+		$('#reg_Div').show();
+	}else{
+		$('#reg_Div').hide();
+		$('#loginUser').hide();
+		$('#regUser').show();
+		$('#login_Div').show();
+	}
+}
+
+
+function AfterOperate(param) {
+		if(param.op =="loginUser"){
+			if(param.result=='0000'){
+				var url = param.data;
+	    		if(url.length > 0) {
+	    			window.location.href=url;
+	    		} else {
+	    			window.location.href="../m/home";
+	    		}	
+	    		return;
+	    	}else{
+	    		alert(param.message);
+	    		return ;
+	    	}
+		}
+		
+		if(param.op =="addUser"){
+			if(param.result=='0000'){
+	    		alert("注册成功");
+				var url = param.data;
+	    		if(url.length > 0) {
+	    			window.location.href=url;
+	    		} else {
+	    			window.location.href="../m/home";
+	    		}	    			    		
+	    		return;
+	    	}else{
+	    		alert(param.message);
+	    		return;
+	    	}
+		}
+		
+	return;
+}
+  	
+
+	
+	//发送验证码
+	function sendPhoneCode() {
+			var phone = $.trim($("#reg_phone").val());
+			if(!(/^1[3|4|5|8][0-9]\d{8}$/.test(phone))) {
+				alert('请输入有效的手机号码')
+				return ;
+			}
+			var url = "../mobilecode/send";
+			var par = "phone=" + phone;
+				$.ajax({
+					type: "POST",data: par,url: url,dataType: "json",
+					success: function(ret){
+						if('0000' == ret.result) {
+							resetCode();
+							$("#phonecode").val("");
+						} else {
+							alert(ret.message);
+						}
+					}
+				});
+			
+	}
+	
+	function checkLogin(){
+		var phone = $.trim($('#login_phone').val());
+		var passwd = $.trim($('#login_pass').val());
+		if(!(/^1[3|4|5|8][0-9]\d{8}$/.test(phone))) {
+			alert('请输入有效手机号码');
+			return false;
+		}
+		if(!(/^[A-Za-z0-9_]\w{5,19}$/.test(passwd))){
+			alert('密码格式为6~20位任意字母和数字')
+			return false;
+		}
+		return true;
+	}
+	//判断注册内容是否正确
+	        
+	function checkReg(){
+		var phone = $.trim($('#reg_phone').val());
+		var phonecode = $.trim($('#phonecode').val());
+		var reg_pass1 = $.trim($('#reg_pass1').val());
+		var reg_pass2 = $.trim($('#reg_pass2').val());
+		var nick = $.trim($('#nick').val());
+		
+		if(!(/^1[3|4|5|8][0-9]\d{8}$/.test(phone))) {
+			alert('请输入有效手机号码');
+			return false;;
+		}
+		if(phonecode.length!=4||isNaN(phonecode)){
+			alert('请输入正确的验证码');
+			return false;
+		}
+		if(nick.length==0){
+			alert('昵称不能为空')
+			return false;
+		}
+		if(!(/^[A-Za-z0-9_]\w{5,19}$/.test(reg_pass1))){
+			alert('密码格式为6~20位任意字母和数字')
+			return false;
+		}
+		if(reg_pass1!=reg_pass2){
+			alert('两次密码输入不一致');
+			return false;
+		}
+		
+		return true;
+	}
+//60秒重发	
+function resetCode(){
+	var time=60;
+	var timer=null;
+	clearInterval(timer)
+		$('#getcode').attr('disabled','disabled');
+		$('#getcode').css({'background':'#fff','border-color':'#ddd','color':'#ccc'})
+		$('#getcode').val(time+'秒后重发');	
+	timer=setInterval(function(){
+		
+		time-=1;
+		$('#getcode').attr('disabled','disabled');
+		$('#getcode').css({'background':'#fff','border-color':'#ddd','color':'#ccc'})
+		$('#getcode').val(time+'秒后重发');	
+		if(time==0){
+			clearInterval(timer);
+			$('#getcode').removeAttr('disabled');
+			$('#getcode').css({'background':'#f0f0f0','border-color':'#ccc','color':'#666'})
+			$('#getcode').mouseover(function(){$(this).css({'background':'#ddd'})});
+			$('#getcode').mouseout(function(){$(this).css({'background':'#f0f0f0'})});
+			$('#getcode').val('获取验证码');	
+		}
+		
+		
+	},1000)
+}
+
+</script>

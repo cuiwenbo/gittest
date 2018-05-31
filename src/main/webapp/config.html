@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>配置管理</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <script src="js/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script>
+        	function clearMessage() {
+        		$("#input_mess").val("");
+        	}
+        	function showMessage(mess) {
+        		$("#input_mess").val(mess);
+        	}
+        	
+        	function getConfig() {
+        		clearMessage();
+        		$("#input_val").val("");
+        		var key = $.trim($("#input_key").val());
+        		if(key.length == 0) {
+        			showMessage("请输入KEY");
+        			return;
+        		}
+        		var app = $.trim($("#input_app").val());
+        		showMessage("正在读取配置数据");
+        		var p = {};
+        		p.key = key;
+        		p.app = app;
+        		$.ajax({
+          			url:"tools/getconfig",
+          			type:"post",
+          			data:p,
+          			dataType:"json",
+          			success: function(ret){
+          				var code = ret.result;
+          				if(code == 0) {
+          					showMessage("读取数据完成");
+          					$("#input_val").val(ret.data);
+          				} else {
+          					showMessage(code + ":" + ret.message)
+          				} 				
+          		}});  		
+        	}
+        	
+        	
+        	function resetConfig() {
+        		clearMessage();
+        		$("#input_val").val("");
+        		showMessage("正在重置配置数据");
+        		$.ajax({
+          			url:"tools/resetconfig",
+          			type:"post",
+          			dataType:"json",
+          			success: function(ret){
+          				var code = ret.result;
+          				if(code == 0) {
+          					showMessage("重置配置数据");          					
+          				} else {
+          					showMessage(code + ":" + ret.message)
+          				} 				
+          		}});  		
+        	}
+        	
+        </script>
+</head>
+<body>
+<div class="container">
+        <div class="row">
+                <div class="col-xs-12 alert alert-warning text-center">配置管理</div>				
+                <div class="btn-group col-xs-12" style="margin-top:20px;margin-bottom:20px">
+  				<button type="button" onclick="getConfig()" class="col-xs-2 btn btn-info">读 取</button>
+  				<button type="button" onclick="resetConfig()" class="col-xs-2 btn btn-warning">重置配置</button>
+
+				</div>
+                
+                <div class="col-xs-12">
+                        <div class="input-group">
+                        <span class="input-group-addon">　KEY：</span><input type="text" id="input_key" class="form-control" placeholder="输入配置的KEY">
+                        </div>
+                        <div class="input-group" style="margin-top:10px">
+                        <span class="input-group-addon">　APP：</span><input type="text" id="input_app"  value="PUB" class="form-control" placeholder="所在的平台">
+                        </div>
+                        
+                        <div class="input-group" style="margin-top:10px">
+                        <span class="input-group-addon">　　值：</span><textarea id="input_val" class="form-control" rows="10"></textarea>
+                        </div>
+                </div>
+            	<div class="col-xs-12" style="margin-top:20px">
+            	<input style="color:red" readonly type="text" id="input_mess" class="form-control" />
+            	</div>
+        </div>
+</div>
+</body>
+</html>

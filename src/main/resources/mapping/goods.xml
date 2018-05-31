@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="goods">
+
+    <select id="getId_tb_goods" resultType="long">
+        select max(id) from tb_goods
+    </select>
+  		<!-- 添加商品 -->
+  	<insert id="insert" parameterType="com.manong.mall.bean.GoodsBean"><!-- 新增商品 -->
+    	insert into tb_goods (id,sid,name,picts,content,price,unit,param,amount,orderamount,userlimit,optime,deliverymethod,deliveryfee,state,recommend,evalcount,remarks,pid,isvalid,oprice,paytype)
+		VALUES(#{id},#{sid},#{name},#{picts},#{content},#{price},#{unit},#{param},#{amount},#{orderamount},#{userlimit},now(),#{deliverymethod},#{deliveryfee},0,0,#{evalcount},DEFAULT,#{pid},#{isvalid},#{oprice},#{paytype})
+    </insert>
+  
+  		<!--商品列表  -->
+  	<select id="getCount" parameterType="map" resultType="int"><!-- 分页得到总条数 -->
+        select count(1) from tb_goods where sid=#{sid} and isvalid=0
+        <if test="state != null">
+            and state=#{state}
+        </if>
+
+        <if test="orderamount != null">
+            and orderamount &gt;0 and amount &gt;0
+        </if>
+
+        <if test="amount != null">
+
+            and amount &lt;=0
+        </if>
+        <if test="amount1 != null">
+            and amount &gt;0
+        </if>
+    </select>
+    <select id="listAll" parameterType="map" resultType="com.manong.mall.bean.GoodsBean"><!--根据商户id得到其所有商品信息 -->
+        select * from tb_goods where sid=#{sid} and isvalid=0
+        <if test="state != null">
+            and state=#{state}
+        </if>
+        <if test="orderamount != null">
+            and orderamount &gt;0 and amount &gt;0
+        </if>
+        <if test="amount != null">
+            and amount &lt;=0
+        </if>
+        <if test="amount1 != null">
+            and amount &gt;0
+        </if>
+      order by id desc limit #{firstResult},#{maxResult}
+    </select>
+  
+    
+    <update id="cancelOrder" parameterType="long">
+        update tb_order set state=8 where goods=#{gid} and state=0
+    </update>
+    	<!-- 商品推荐 -->
+   <update id="recommend" parameterType="map">
+        update tb_goods set recommend=#{recommend} where id=#{id}
+    </update>
+    	<!-- 根据id得到相应商品信息 -->   
+     <select id="getGoodsById" parameterType="long" resultType="com.manong.mall.bean.GoodsBean">
+        select * from tb_goods where  id=#{id}
+    </select>
+    	<!-- 删除商品 -->
+    <delete id="del" parameterType="long">
+      	delete from tb_goods where id=#{id}
+    </delete>
+     <update id="off" parameterType="map"><!-- 商品下架-->
+    	update tb_goods set state=#{state} where id=#{id}
+    </update>
+    	<!--编辑商品信息  -->
+    <select id="getOrderCount" parameterType="long" resultType="int">
+    	select count(1) from tb_order where goods=#{id}
+    </select>
+    <select id="getinfoByid" parameterType="long" resultType="com.manong.mall.bean.GoodsBean">
+    	    select * from tb_goods where id=#{id}
+    </select>
+    <update id="edit" parameterType="com.manong.mall.bean.GoodsBean">
+    	update tb_goods set name=#{name},picts=#{picts},content=#{content},price=#{price},unit=#{unit},param=#{param},amount=#{amount},
+    	orderamount=#{orderamount},userlimit=#{userlimit},deliverymethod=#{deliverymethod},deliveryfee=#{deliveryfee},oprice=#{oprice},paytype=#{paytype} where id=#{id}
+    </update>	
+    <update id="unvalidOrder" parameterType="long"><!-- 改为失效订单 -->
+        update tb_order set state=8 where goods=#{id}
+    </update>
+    <update id="setUnValid" parameterType="long"><!-- 将商品改为失效商品 -->
+        update tb_goods set isvalid=1,unvalidtime=now() where id=#{id}
+    </update>
+    
+    <!-- 浏览记录 -->
+    <select id="getinfo" parameterType="map" resultType="com.manong.mall.bean.ShopFocusAndVisitBean">
+        select * from tb_user_visit where uid=#{uid} and sid=#{sid} and gid=#{gid}
+    </select>
+    <insert id="addVisit" parameterType="com.manong.mall.bean.ShopFocusAndVisitBean">
+        insert into tb_user_visit (uid,sid,gid,visittime) values(#{uid},#{sid},#{gid},now())
+    </insert>
+    <update id="editTime" parameterType="long">
+        update tb_user_visit  set  visittime=now() where id=#{id}
+    </update> 
+    
+    <update id="editShowTime" parameterType="long"><!-- 修改商品浏览次数 -->
+        update tb_goods set showtimes=showtimes+1 where id=#{id}
+    </update>
+    
+    <select id="visit_getCount" parameterType="map" resultType="int"><!-- 分页得到总条数 -->
+        select count(1) from tb_user_visit v,tb_shop s,tb_goods g where v.sid=s.id and v.gid=g.id AND
+		v.uid=#{uid}
+    </select>
+    <select id="visit_listAll" parameterType="map" resultType="com.manong.mall.bean.ShopFocusAndVisitBean">
+       select v.*,s.id as shopid,s.`name`,g.id as goodsid,g.`name` as gname,g.picts,g.price from tb_user_visit v,tb_shop s,tb_goods g where v.sid=s.id and v.gid=g.id AND
+		v.uid=#{uid} ORDER BY v.visittime DESC  limit #{firstResult},#{maxResult}
+    </select>
+    
+</mapper>
